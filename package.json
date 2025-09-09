@@ -1,6 +1,84 @@
 {
-	"dependencies": {
-		"@nestjs/mongoose": "^11.0.3",
-		"mongoose": "^8.18.1"
-	}
+  "name": "visual-canva-brainstorm-backend",
+  "version": "1.0.0",
+  "description": "Collaborative visual brainstorming canvas backend - NestJS microservices architecture",
+  "private": true,
+  "workspaces": [
+    "auth-service",
+    "canvas-service",
+    "chat-service",
+    "gateway-service",
+    "shapes-service",
+    "user-service"
+  ],
+  "scripts": {
+    "build": "nest build",
+    "build:services": "pnpm -r build",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "start:services": "pnpm -r start",
+    "start:services:dev": "pnpm -r start:dev",
+    "start:services:prod": "pnpm -r start:prod",
+    "test": "pnpm -r test",
+    "test:watch": "pnpm -r test:watch",
+    "test:cov": "pnpm -r test:cov",
+    "test:e2e": "pnpm -r test:e2e",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "format": "pnpm -r format",
+    "clean": "pnpm -r clean && rm -rf node_modules",
+    "install:all": "pnpm install",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "services:start": "concurrently \"pnpm --filter auth-service start:dev\" \"pnpm --filter user-service start:dev\" \"pnpm --filter canvas-service start:dev\" \"pnpm --filter chat-service start:dev\" \"pnpm --filter shapes-service start:dev\" \"pnpm --filter gateway-service start:dev\"",
+    "services:build": "pnpm --filter auth-service build && pnpm --filter user-service build && pnpm --filter canvas-service build && pnpm --filter chat-service build && pnpm --filter shapes-service build && pnpm --filter gateway-service build"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.1.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chelsynew72/visual-canva-brainstorm-backend.git"
+  },
+  "keywords": [
+    "nestjs",
+    "microservices",
+    "canvas",
+    "collaboration",
+    "websocket",
+    "rabbitmq",
+    "mongodb",
+    "typescript"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.1.6",
+    "@nestjs/jwt": "^11.0.0",
+    "@nestjs/microservices": "^11.1.6",
+    "@nestjs/swagger": "^11.2.0",
+    "amqp-connection-manager": "^4.1.14",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  }
 }

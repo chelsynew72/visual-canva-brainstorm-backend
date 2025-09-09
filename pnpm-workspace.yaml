@@ -1,0 +1,16 @@
+packages:
+  - 'auth-service'
+  - 'canvas-service'
+  - 'chat-service'
+  - 'gateway-service'
+  - 'shapes-service'
+  - 'user-service'
+
+# Shared dependencies will be hoisted to root
+shared-workspace-lockfile: true
+
+# Enable peer dependency auto-install
+auto-install-peers: true
+
+# Enable strict peer dependencies
+strict-peer-dependencies: false
