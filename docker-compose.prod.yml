@@ -1,0 +1,266 @@
+version: '3.8'
+
+services:
+  # Infrastructure Services
+  mongodb:
+    image: mongo:7.0
+    container_name: visual-canvas-mongodb-prod
+    restart: always
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE:-visual_canvas}
+    volumes:
+      - mongodb_data_prod:/data/db
+      - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - visual-canvas-network
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+          cpus: '0.5'
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: visual-canvas-rabbitmq-prod
+    restart: always
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:-admin}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-password}
+      RABBITMQ_DEFAULT_VHOST: /
+    volumes:
+      - rabbitmq_data_prod:/var/lib/rabbitmq
+    networks:
+      - visual-canvas-network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '0.3'
+
+  redis:
+    image: redis:7-alpine
+    container_name: visual-canvas-redis-prod
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data_prod:/data
+    networks:
+      - visual-canvas-network
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-password}
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+          cpus: '0.2'
+
+  # Gateway Service
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile.prod
+    container_name: visual-canvas-gateway-prod
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://${MONGODB_USERNAME:-admin}:${MONGODB_PASSWORD:-password}@mongodb:27017/${MONGODB_DATABASE:-visual_canvas}?authSource=admin
+      - RABBITMQ_URL=amqp://${RABBITMQ_USERNAME:-admin}:${RABBITMQ_PASSWORD:-password}@rabbitmq:5672
+      - REDIS_URL=redis://redis:6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-password}
+    depends_on:
+      - mongodb
+      - rabbitmq
+      - redis
+    networks:
+      - visual-canvas-network
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '0.3'
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile.prod
+    container_name: visual-canvas-auth-prod
+    restart: always
+    ports:
+      - '3002:3002'
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+      - MONGODB_URI=mongodb://${MONGODB_USERNAME:-admin}:${MONGODB_PASSWORD:-password}@mongodb:27017/${MONGODB_DATABASE:-visual_canvas}?authSource=admin
+      - RABBITMQ_URL=amqp://${RABBITMQ_USERNAME:-admin}:${RABBITMQ_PASSWORD:-password}@rabbitmq:5672
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-here}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-24h}
+    depends_on:
+      - mongodb
+      - rabbitmq
+    networks:
+      - visual-canvas-network
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '0.3'
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+
+  # User Service
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile.prod
+    container_name: visual-canvas-user-prod
+    restart: always
+    ports:
+      - '3003:3003'
+    environment:
+      - NODE_ENV=production
+      - PORT=3003
+      - MONGODB_URI=mongodb://${MONGODB_USERNAME:-admin}:${MONGODB_PASSWORD:-password}@mongodb:27017/${MONGODB_DATABASE:-visual_canvas}?authSource=admin
+      - RABBITMQ_URL=amqp://${RABBITMQ_USERNAME:-admin}:${RABBITMQ_PASSWORD:-password}@rabbitmq:5672
+    depends_on:
+      - mongodb
+      - rabbitmq
+      - auth-service
+    networks:
+      - visual-canvas-network
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '0.3'
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+
+  # Canvas Service
+  canvas-service:
+    build:
+      context: ./canvas-service
+      dockerfile: Dockerfile.prod
+    container_name: visual-canvas-canvas-prod
+    restart: always
+    ports:
+      - '3001:3001'
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - MONGODB_URI=mongodb://${MONGODB_USERNAME:-admin}:${MONGODB_PASSWORD:-password}@mongodb:27017/${MONGODB_DATABASE:-visual_canvas}?authSource=admin
+      - RABBITMQ_URL=amqp://${RABBITMQ_USERNAME:-admin}:${RABBITMQ_PASSWORD:-password}@rabbitmq:5672
+      - USER_SERVICE_URL=http://user-service:3003
+      - AUTH_SERVICE_URL=http://auth-service:3002
+    depends_on:
+      - mongodb
+      - rabbitmq
+      - user-service
+      - auth-service
+    networks:
+      - visual-canvas-network
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+          cpus: '0.5'
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+
+  # Chat Service
+  chat-service:
+    build:
+      context: ./chat-service
+      dockerfile: Dockerfile.prod
+    container_name: visual-canvas-chat-prod
+    restart: always
+    ports:
+      - '3004:3004'
+    environment:
+      - NODE_ENV=production
+      - PORT=3004
+      - MONGODB_URI=mongodb://${MONGODB_USERNAME:-admin}:${MONGODB_PASSWORD:-password}@mongodb:27017/${MONGODB_DATABASE:-visual_canvas}?authSource=admin
+      - RABBITMQ_URL=amqp://${RABBITMQ_USERNAME:-admin}:${RABBITMQ_PASSWORD:-password}@rabbitmq:5672
+      - REDIS_URL=redis://redis:6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-password}
+    depends_on:
+      - mongodb
+      - rabbitmq
+      - redis
+    networks:
+      - visual-canvas-network
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '0.3'
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+
+  # Shapes Service
+  shapes-service:
+    build:
+      context: ./shapes-service
+      dockerfile: Dockerfile.prod
+    container_name: visual-canvas-shapes-prod
+    restart: always
+    ports:
+      - '3005:3005'
+    environment:
+      - NODE_ENV=production
+      - PORT=3005
+      - MONGODB_URI=mongodb://${MONGODB_USERNAME:-admin}:${MONGODB_PASSWORD:-password}@mongodb:27017/${MONGODB_DATABASE:-visual_canvas}?authSource=admin
+      - RABBITMQ_URL=amqp://${RABBITMQ_USERNAME:-admin}:${RABBITMQ_PASSWORD:-password}@rabbitmq:5672
+    depends_on:
+      - mongodb
+      - rabbitmq
+    networks:
+      - visual-canvas-network
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '0.3'
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+
+volumes:
+  mongodb_data_prod:
+    driver: local
+  rabbitmq_data_prod:
+    driver: local
+  redis_data_prod:
+    driver: local
+
+networks:
+  visual-canvas-network:
+    driver: bridge
