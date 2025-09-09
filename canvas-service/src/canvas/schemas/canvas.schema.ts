@@ -8,7 +8,7 @@ export class Canvas {
   @Prop({ required: true, unique: true })
   canvasId: string;
 
-  @Prop({ required: true, index: true })
+  @Prop({ required: true })
   roomId: string;
 
   @Prop({ default: 'Untitled Canvas' })
@@ -100,7 +100,7 @@ export class Canvas {
   @Prop({ type: [Object], default: [] })
   history: Array<{
     action: string;
-    shapeId: string;
+    shapeId: string | null;
     timestamp: Date;
     userId: string;
     data: any;
@@ -122,6 +122,6 @@ CanvasSchema.index({ 'shapes.id': 1 });
 CanvasSchema.index({ createdAt: -1 });
 
 // Generate unique canvas ID
-CanvasSchema.statics.generateCanvasId = function() {
+CanvasSchema.statics.generateCanvasId = function () {
   return 'canvas_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 };
