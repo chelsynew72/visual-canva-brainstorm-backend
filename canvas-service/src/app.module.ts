@@ -8,7 +8,7 @@ import { CanvasModule } from './canvas/canvas.module';
 import { ShapesModule } from './shapes/shapes.module';
 // import { CollaborationModule } from './collaboration/collaboration.module';
 // import { ExportModule } from './export/export.module';
-import configuration from '../../src/config/configuration';
+import configuration from './config/configuration';
 
 @Module({
   imports: [

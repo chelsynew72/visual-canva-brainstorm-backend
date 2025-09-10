@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ShapesService } from '../shapes/shapes.service';
-import { ShapesController } from '../shapes/shapes.controller';
+import { ShapesService } from './shapes.service';
+import { ShapesController } from './shapes.controller';
 
 @Module({
   controllers: [ShapesController],
