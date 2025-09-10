@@ -14,8 +14,13 @@ export class AppController {
   }
 
   @Get('health')
-  @ApiOperation({ summary: 'Service health status' })
   getHealth() {
-    return this.appService.getHealth();
+    return {
+      service: 'canvas-service',
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      version: '1.0.0',
+      features: ['canvas-management', 'real-time-collaboration', 'shape-operations', 'export'],
+    };
   }
 }
