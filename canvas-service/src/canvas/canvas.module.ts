@@ -16,7 +16,7 @@ import { Canvas, CanvasSchema } from './schemas/canvas.schema';
         useFactory: (configService: ConfigService) => ({
           transport: Transport.RMQ,
           options: {
-            urls: [configService.get('services.room.url')],
+            urls: [configService.get<string>('services.room.url') as string],
             queue: configService.get<string>('services.room.queue'),
             queueOptions: { durable: true },
           },

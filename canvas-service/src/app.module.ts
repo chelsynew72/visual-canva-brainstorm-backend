@@ -6,9 +6,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CanvasModule } from './canvas/canvas.module';
 import { ShapesModule } from './shapes/shapes.module';
-import { CollaborationModule } from './collaboration/collaboration.module';
-import { ExportModule } from './export/export.module';
-import configuration from './config/configuration';
+// import { CollaborationModule } from './collaboration/collaboration.module';
+// import { ExportModule } from './export/export.module';
+import configuration from '../../src/config/configuration';
 
 @Module({
   imports: [
@@ -100,8 +100,8 @@ import configuration from './config/configuration';
     // Feature modules
     CanvasModule,
     ShapesModule,
-    CollaborationModule,
-    ExportModule,
+    // CollaborationModule,
+    // ExportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

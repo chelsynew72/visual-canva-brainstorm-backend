@@ -75,9 +75,9 @@ export class Canvas {
       opacity: number;
     };
     content?: {
-      text: string;
-      fontSize: number;
-      fontFamily: string;
+      text?: string;
+      fontSize?: number;
+      fontFamily?: string;
     };
     path?: Array<{ x: number; y: number }>;
     rotation: number;
