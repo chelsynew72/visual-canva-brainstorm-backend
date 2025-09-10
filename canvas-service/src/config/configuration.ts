@@ -47,7 +47,7 @@ export default () => ({
     cursorUpdateInterval: 100, // milliseconds
     presenceTimeout: 30000, // 30 seconds
   },
-  
+
   export: {
     maxFileSize: 50 * 1024 * 1024, // 50MB
     supportedFormats: ['png', 'jpg', 'svg', 'pdf'],
