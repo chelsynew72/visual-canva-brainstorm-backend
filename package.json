@@ -38,6 +38,7 @@
     "services:build": "pnpm --filter auth-service build && pnpm --filter user-service build && pnpm --filter canvas-service build && pnpm --filter chat-service build && pnpm --filter shapes-service build && pnpm --filter gateway-service build"
   },
   "devDependencies": {
+    "@nestjs/cli": "^11.0.10",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
@@ -74,10 +75,13 @@
     "@nestjs/core": "^11.1.6",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/microservices": "^11.1.6",
+    "@nestjs/mongoose": "^10.1.0",
     "@nestjs/swagger": "^11.2.0",
     "amqp-connection-manager": "^4.1.14",
+    "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "mongoose": "^8.18.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   }

@@ -271,3 +271,4 @@ benchmarks/results/
 
 # Documentation build
 docs/build/
+node_modules
