@@ -4,6 +4,7 @@
 node_modules/
 **/node_modules/
 jspm_packages/
+venv/
 
 # Package manager lock files (keep only root pnpm-lock.yaml)
 **/pnpm-lock.yaml
@@ -271,3 +272,4 @@ benchmarks/results/
 
 # Documentation build
 docs/build/
+node_modules

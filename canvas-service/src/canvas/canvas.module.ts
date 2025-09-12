@@ -6,6 +6,7 @@ import { CanvasController } from './canvas.controller';
 import { CanvasService } from './canvas.service';
 import { CanvasGateway } from './canvas.gateway';
 import { Canvas, CanvasSchema } from './schemas/canvas.schema';
+import { CollaborationModule } from '../collaboration/collaboration.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { Canvas, CanvasSchema } from './schemas/canvas.schema';
         inject: [ConfigService],
       },
     ]),
+    CollaborationModule,
   ],
   controllers: [CanvasController],
   providers: [CanvasService, CanvasGateway],
