@@ -22,7 +22,13 @@ let AppController = class AppController {
         return this.appService.getHello();
     }
     getHealth() {
-        return this.appService.getHealth();
+        return {
+            service: 'canvas-service',
+            status: 'healthy',
+            timestamp: new Date().toISOString(),
+            version: '1.0.0',
+            features: ['canvas-management', 'real-time-collaboration', 'shape-operations', 'export'],
+        };
     }
 };
 exports.AppController = AppController;
@@ -35,7 +41,6 @@ __decorate([
 ], AppController.prototype, "getHello", null);
 __decorate([
     (0, common_1.Get)('health'),
-    (0, swagger_1.ApiOperation)({ summary: 'Service health status' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)

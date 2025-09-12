@@ -156,7 +156,15 @@ Services communicate via:
 
 ### RabbitMQ Queues
 - `auth-service` - Authentication events
-- `user-service` - User management events  
+- `user-service` - User management events ; 
+GET /api/v1/users → should return all users.
+
+GET /api/v1/users/{id} → fetch a single user.
+
+PUT /api/v1/users/{id} → update name or password.
+
+DELETE /api/v1/users/{id} → remove a user.
+ 
 - `canvas-service` - Canvas updates
 - `chat-service` - Message routing
 - `shapes-service` - Shape events
