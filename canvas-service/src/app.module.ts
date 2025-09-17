@@ -6,7 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CanvasModule } from './canvas/canvas.module';
 import { ShapesModule } from './shapes/shapes.module';
-// import { CollaborationModule } from './collaboration/collaboration.module';
+import { CollaborationModule } from './collaboration/collaboration.module';
+import { Canvas, CanvasSchema } from './canvas/schemas/canvas.schema';
 // import { ExportModule } from './export/export.module';
 import configuration from './config/configuration';
 
@@ -29,6 +30,9 @@ import configuration from './config/configuration';
       }),
       inject: [ConfigService],
     }),
+
+    // Canvas model for AppService
+    MongooseModule.forFeature([{ name: Canvas.name, schema: CanvasSchema }]),
 
     // RabbitMQ clients for inter-service communication
     ClientsModule.registerAsync([
@@ -100,7 +104,7 @@ import configuration from './config/configuration';
     // Feature modules
     CanvasModule,
     ShapesModule,
-    // CollaborationModule,
+    CollaborationModule,
     // ExportModule,
   ],
   controllers: [AppController],
