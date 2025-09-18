@@ -9,12 +9,14 @@ import { CanvasFilterDto } from './dto/canvas-filter.dto';
 import { CanvasResponseDto } from './dto/canvas-response.dto';
 import { CreateShapeDto } from './dto/create-shape.dto';
 import { UpdateShapeDto } from './dto/update-shape.dto';
+import { CollaborationService } from '../collaboration/collaboration.service';
 
 @Injectable()
 export class CanvasService {
   constructor(
     @InjectModel(Canvas.name) private canvasModel: Model<CanvasDocument>,
     @Inject('ROOM_SERVICE') private roomService: ClientProxy,
+    private readonly collaborationService: CollaborationService,
   ) {}
 
   async create(createCanvasDto: CreateCanvasDto, userId: string): Promise<CanvasResponseDto> {
@@ -150,8 +152,8 @@ export class CanvasService {
       .exec();
 
     // Emit update event
-    this.roomService.emit('canvas.updated', {
-      canvasId: id,
+    this.collaborationService.broadcastCanvasUpdate(id, {
+      event: 'canvas.updated',
       updatedBy: userId,
       version: updatedCanvas!.version,
       changes: updateCanvasDto,
@@ -168,8 +170,8 @@ export class CanvasService {
     }
 
     // Emit delete event
-    this.roomService.emit('canvas.deleted', {
-      canvasId: id,
+    this.collaborationService.broadcastCanvasUpdate(id, {
+      event: 'canvas.deleted',
     });
   }
 
@@ -229,8 +231,8 @@ export class CanvasService {
     const updatedCanvas = await canvas.save();
 
     // Emit shape added event
-    this.roomService.emit('canvas.shape.added', {
-      canvasId,
+    this.collaborationService.broadcastCanvasUpdate(canvasId, {
+      event: 'canvas.shape.added',
       shape: newShape,
       addedBy: userId,
     });
@@ -277,8 +279,8 @@ export class CanvasService {
     const updatedCanvas = await canvas.save();
 
     // Emit shape updated event
-    this.roomService.emit('canvas.shape.updated', {
-      canvasId,
+    this.collaborationService.broadcastCanvasUpdate(canvasId, {
+      event: 'canvas.shape.updated',
       shapeId,
       shape: updatedShape,
       updatedBy: userId,
@@ -318,8 +320,8 @@ export class CanvasService {
     const updatedCanvas = await canvas.save();
 
     // Emit shape removed event
-    this.roomService.emit('canvas.shape.removed', {
-      canvasId,
+    this.collaborationService.broadcastCanvasUpdate(canvasId, {
+      event: 'canvas.shape.removed',
       shapeId,
       removedBy: userId,
     });

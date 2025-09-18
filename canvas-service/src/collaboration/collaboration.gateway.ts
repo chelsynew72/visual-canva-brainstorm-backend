@@ -32,16 +32,50 @@ export class CollaborationGateway implements OnGatewayConnection, OnGatewayDisco
   handleJoinCanvas(@MessageBody() canvasId: string, @ConnectedSocket() client: Socket) {
     client.join(canvasId);
     console.log(`Client ${client.id} joined canvas ${canvasId}`);
+    
+    // Notify other users in the room
+    client.to(canvasId).emit('userJoined', {
+      userId: client.id,
+      userData: { name: `User ${client.id.slice(-4)}` }
+    });
   }
 
   @SubscribeMessage('leaveCanvas')
   handleLeaveCanvas(@MessageBody() canvasId: string, @ConnectedSocket() client: Socket) {
     client.leave(canvasId);
     console.log(`Client ${client.id} left canvas ${canvasId}`);
+    
+    // Notify other users in the room
+    client.to(canvasId).emit('userLeft', {
+      userId: client.id
+    });
   }
 
   @SubscribeMessage('canvasUpdate')
-  handleCanvasUpdate(@MessageBody() data: any) {
-    this.server.to(data.canvasId).emit('canvasUpdated', data.payload);
+  handleCanvasUpdate(
+    @MessageBody() data: { 
+      canvasId: string; 
+      payload: { 
+        type: string;
+        shapes?: any[];
+        shape?: any;
+        shapeIds?: string[];
+        userId?: string;
+      } 
+    },
+    @ConnectedSocket() client: Socket
+  ) {
+    console.log(`Canvas update from ${client.id}:`, {
+      canvasId: data.canvasId,
+      type: data.payload.type,
+      shapesCount: data.payload.shapes?.length,
+      userId: data.payload.userId
+    });
+    
+    // Broadcast to all other clients in the same canvas room
+    client.to(data.canvasId).emit('canvasUpdated', {
+      ...data.payload,
+      userId: client.id
+    });
   }
 }

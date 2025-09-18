@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
@@ -19,5 +19,12 @@ export class AppController {
   @ApiResponse({ status: 200, description: 'Service is healthy' })
   getHealth() {
     return this.appService.getHealth();
+  }
+
+  @Post('api/canvas/save')
+  @ApiOperation({ summary: 'Save canvas data' })
+  @ApiResponse({ status: 201, description: 'Canvas saved successfully' })
+  saveCanvas(@Body() canvasData: any) {
+    return this.appService.saveCanvas(canvasData);
   }
 }

@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { GatewayModule } from '../gateway-service/gateway.module';
+import { GatewayModule } from './gateway/gateway.module';
 import { SharedModule } from './shared/shared.module';
 import configuration from './config/configuration';
 import { UserModule } from '@user/user.module';
