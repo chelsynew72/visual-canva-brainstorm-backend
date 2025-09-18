@@ -4,10 +4,10 @@ import { AuthModule } from './auth.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
-  
+
   // Enable validation pipes globally
   app.useGlobalPipes(new ValidationPipe());
-  
+
   // Enable CORS for development
   app.enableCors({
     origin: true,
@@ -16,7 +16,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3001;
   await app.listen(port);
-  
+
   console.log(`🚀 Auth Service is running on: http://localhost:${port}`);
 }
 
