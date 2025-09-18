@@ -20,7 +20,7 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: configService.get<string[]>('cors.allowedOrigins'),
+    origin: configService.get<string[]>('cors.allowedOrigins') || ['http://192.168.1.122:3001', 'http://localhost:3001'],
     credentials: true,
   });
 

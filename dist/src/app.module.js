@@ -34,7 +34,7 @@ exports.AppModule = AppModule = __decorate([
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],
                 useFactory: async (configService) => ({
-                    uri: configService.get('MONGODB_URI') || 'mongodb://localhost:27017/brainstorm',
+                    uri: configService.get('database.mongodb.uri'),
                 }),
             }),
             user_module_1.UserModule,

@@ -1,11 +1,11 @@
 export default () => ({
-  port: parseInt(process.env.PORT, 10) || 3000,
+  port: parseInt(process.env.PORT, 10) || 3002,
   nodeEnv: process.env.NODE_ENV || 'development',
   
   // Database configurations
   database: {
     mongodb: {
-      uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/visual-canvas-main',
+      uri: (process.env.MONGODB_URI && process.env.MONGODB_URI !== 'undefined') ? process.env.MONGODB_URI : 'mongodb://localhost:27017/visual-canvas-main',
     },
     redis: {
       host: process.env.REDIS_HOST || 'localhost',

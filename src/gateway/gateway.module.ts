@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CanvasGatewayController } from './canvas-gateway.controller';
+import { AuthGatewayController } from './auth-gateway.controller';
+import { UserGatewayController } from './user-gateway.controller';
 
 @Module({
   imports: [
@@ -19,10 +21,32 @@ import { CanvasGatewayController } from './canvas-gateway.controller';
         }),
         inject: [ConfigService],
       },
+      {
+        name: 'AUTH_SERVICE',
+        useFactory: () => ({
+          transport: Transport.TCP,
+          options: {
+            host: '127.0.0.1',
+            port: 3001,
+          },
+        }),
+      },
+      {
+        name: 'USER_SERVICE',
+        useFactory: () => ({
+          transport: Transport.TCP,
+          options: {
+            host: '127.0.0.1',
+            port: 3002,
+          },
+        }),
+      },
     ]),
   ],
   controllers: [
     CanvasGatewayController,
+    AuthGatewayController,
+    UserGatewayController,
   ],
 })
 export class GatewayModule {}

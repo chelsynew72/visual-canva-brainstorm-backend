@@ -18,12 +18,12 @@ import { UserModule } from '@user/user.module';
       envFilePath: ['.env.local', '.env'],
     }),
 
-    // ✅ Database connection (MongoDB)
+    //  Database connection (MongoDB)
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI') || 'mongodb://localhost:27017/brainstorm',
+        uri: configService.get<string>('database.mongodb.uri'),
       }),
     }),
 
