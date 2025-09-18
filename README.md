@@ -178,7 +178,7 @@ DELETE /api/v1/users/{id} → remove a user.
 ## 🧪 Testing
 
 ```bash
-# Unit tests
+# Unit test
 pnpm test
 
 # E2E tests
