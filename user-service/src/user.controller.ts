@@ -31,8 +31,14 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async getCurrentUser(@Request() req: any) {
+    console.log('🔐 DEBUG: getCurrentUser called');
+    console.log('🔐 DEBUG: Request user:', req.user);
+    console.log('🔐 DEBUG: Request headers authorization:', req.headers.authorization ? 'Present' : 'Missing');
+    
     // The JWT strategy already returns the user data in the correct format
-    return req.user;
+    const userData = req.user;
+    console.log('🔐 DEBUG: Returning user data:', userData);
+    return userData;
   }
 
   @Get(':id')

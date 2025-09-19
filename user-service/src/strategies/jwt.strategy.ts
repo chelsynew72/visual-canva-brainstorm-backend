@@ -1,4 +1,5 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
@@ -18,19 +19,26 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
+    console.log('🔑 DEBUG: JWT strategy validate called');
+    console.log('🔑 DEBUG: JWT payload:', payload);
+    
     // Try to find user in database
     const user = await this.userService.findById(payload.sub);
+    console.log('🔑 DEBUG: User found in database:', user ? 'Yes' : 'No');
     
     if (!user) {
       // If user doesn't exist, return a basic profile from the JWT payload
       // In a real application, you'd want to sync user data between services
-      return {
+      const fallbackUser = {
         id: payload.sub,
-        name: `User ${payload.sub.slice(-4)}`, // Basic fallback name
+        name: `${payload.firstName || 'User'} ${payload.lastName || payload.sub.slice(-4)}`, 
         email: payload.email,
       };
+      console.log('🔑 DEBUG: Returning fallback user:', fallbackUser);
+      return fallbackUser;
     }
     
+    console.log('🔑 DEBUG: Returning database user:', user);
     return user;
   }
 }

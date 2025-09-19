@@ -40,7 +40,12 @@ export class AuthService {
     const savedUser = await user.save();
 
     // Generate JWT token
-    const payload = { sub: savedUser._id, email: savedUser.email };
+    const payload = { 
+      sub: savedUser._id, 
+      email: savedUser.email, 
+      firstName: savedUser.firstName,
+      lastName: savedUser.lastName
+    };
     const token = this.jwtService.sign(payload);
 
     // Return user without password
@@ -66,7 +71,12 @@ export class AuthService {
     }
 
     // Generate JWT token
-    const payload = { sub: user._id, email: user.email };
+    const payload = { 
+      sub: user._id, 
+      email: user.email, 
+      firstName: user.firstName,
+      lastName: user.lastName
+    };
     const token = this.jwtService.sign(payload);
 
     // Return user without password
