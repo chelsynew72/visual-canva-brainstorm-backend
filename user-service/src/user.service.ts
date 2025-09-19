@@ -23,8 +23,19 @@ export class UserService {
     return this.userModel.find().exec();
   }
 
-  async findById(id: string): Promise<User | null> {
-    return this.userModel.findById(id).exec();
+  async findById(id: string): Promise<any | null> {
+    const user = await this.userModel.findById(id).exec();
+    if (!user) {
+      return null;
+    }
+    
+    // Return in format expected by frontend
+    return {
+      id: user.id,
+      name: `${user.firstName} ${user.lastName}`,
+      email: user.email,
+      avatar: user.avatar
+    };
   }
 
   async findByEmail(email: string): Promise<User | null> {

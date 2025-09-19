@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { 
+  Controller, 
+  Get, 
+  Post, 
+  Body, 
+  Param, 
+  Put, 
+  Delete, 
+  UseGuards,
+  Request
+} from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('users')
 export class UserController {
@@ -16,6 +26,13 @@ export class UserController {
   @Get()
   async findAll() {
     return this.userService.findAll();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getCurrentUser(@Request() req: any) {
+    // The JWT strategy already returns the user data in the correct format
+    return req.user;
   }
 
   @Get(':id')

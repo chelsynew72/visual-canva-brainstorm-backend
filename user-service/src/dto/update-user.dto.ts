@@ -10,7 +10,10 @@ export class UpdateUserDto {
   password?: string;
 
   @IsOptional()
-  name?: string;
+  firstName?: string;
+
+  @IsOptional()
+  lastName?: string;
 
   @IsOptional()
   avatar?: string;
