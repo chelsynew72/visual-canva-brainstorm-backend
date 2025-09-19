@@ -7,6 +7,14 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  await app.listen(3000);
+  // Enable CORS for frontend communication
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
+
+  const port = process.env.PORT || 3003;
+  await app.listen(port);
+  console.log(`User service running on port ${port}`);
 }
 bootstrap();
