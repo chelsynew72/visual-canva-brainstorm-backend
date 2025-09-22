@@ -26,6 +26,7 @@ import { CanvasFilterDto } from './dto/canvas-filter.dto';
 import { CanvasResponseDto } from './dto/canvas-response.dto';
 import { CreateShapeDto } from './dto/create-shape.dto';
 import { UpdateShapeDto } from './dto/update-shape.dto';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 @ApiTags('canvas')
 @Controller('canvas')
@@ -34,6 +35,7 @@ export class CanvasController {
 
   // HTTP REST Endpoints
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create a new canvas' })
   @ApiResponse({ 
     status: 201, 
@@ -75,6 +77,7 @@ export class CanvasController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update canvas' })
   @ApiParam({ name: 'id', description: 'Canvas ID' })
   @ApiResponse({ 
@@ -93,6 +96,7 @@ export class CanvasController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete canvas' })
   @ApiParam({ name: 'id', description: 'Canvas ID' })
   @ApiResponse({ status: 200, description: 'Canvas deleted successfully' })
@@ -131,6 +135,7 @@ export class CanvasController {
 
   // Shape Management HTTP Endpoints
   @Post(':canvasId/shapes')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Add shape to canvas' })
   @ApiParam({ name: 'canvasId', description: 'Canvas ID' })
   @ApiBody({ type: CreateShapeDto })
@@ -163,6 +168,7 @@ export class CanvasController {
   }
 
   @Patch(':canvasId/shapes/:shapeId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update shape on canvas' })
   @ApiParam({ name: 'canvasId', description: 'Canvas ID' })
   @ApiParam({ name: 'shapeId', description: 'Shape ID' })
@@ -184,6 +190,7 @@ export class CanvasController {
   }
 
   @Delete(':canvasId/shapes/:shapeId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Remove shape from canvas' })
   @ApiParam({ name: 'canvasId', description: 'Canvas ID' })
   @ApiParam({ name: 'shapeId', description: 'Shape ID' })

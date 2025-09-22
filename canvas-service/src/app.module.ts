@@ -2,12 +2,15 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CanvasModule } from './canvas/canvas.module';
 import { ShapesModule } from './shapes/shapes.module';
 import { CollaborationModule } from './collaboration/collaboration.module';
 import { Canvas, CanvasSchema } from './canvas/schemas/canvas.schema';
+import { JwtStrategy } from './strategies/jwt.strategy';
 // import { ExportModule } from './export/export.module';
 import configuration from './config/configuration';
 
@@ -33,6 +36,17 @@ import configuration from './config/configuration';
 
     // Canvas model for AppService
     MongooseModule.forFeature([{ name: Canvas.name, schema: CanvasSchema }]),
+
+    // JWT Authentication
+    PassportModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET') || 'your-secret-key',
+        signOptions: { expiresIn: '24h' },
+      }),
+      inject: [ConfigService],
+    }),
 
     // RabbitMQ clients for inter-service communication
     ClientsModule.registerAsync([
@@ -108,6 +122,6 @@ import configuration from './config/configuration';
     // ExportModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtStrategy],
 })
 export class AppModule {}
