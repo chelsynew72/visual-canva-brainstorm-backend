@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -31,6 +32,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
   ],
   providers: [UserService, JwtStrategy],
   controllers: [UserController],
-  exports: [UserService], 
+  exports: [UserService],
 })
 export class UserModule {}
