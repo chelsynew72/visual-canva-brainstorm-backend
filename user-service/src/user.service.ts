@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -28,13 +32,13 @@ export class UserService {
     if (!user) {
       return null;
     }
-    
+
     // Return in format expected by frontend
     return {
       id: user.id,
       name: `${user.firstName} ${user.lastName}`,
       email: user.email,
-      avatar: user.avatar
+      avatar: user.avatar,
     };
   }
 

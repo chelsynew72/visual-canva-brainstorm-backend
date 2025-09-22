@@ -1,13 +1,16 @@
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Body, 
-  Param, 
-  Put, 
-  Delete, 
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
   UseGuards,
-  Request
+  Request,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -31,14 +34,8 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async getCurrentUser(@Request() req: any) {
-    console.log('🔐 DEBUG: getCurrentUser called');
-    console.log('🔐 DEBUG: Request user:', req.user);
-    console.log('🔐 DEBUG: Request headers authorization:', req.headers.authorization ? 'Present' : 'Missing');
-    
     // The JWT strategy already returns the user data in the correct format
-    const userData = req.user;
-    console.log('🔐 DEBUG: Returning user data:', userData);
-    return userData;
+    return req.user;
   }
 
   @Get(':id')
