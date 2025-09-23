@@ -76,6 +76,7 @@ import { ChatGatewayController } from './chat-gateway.controller';
     CanvasGatewayController,
     UserGatewayController,
     ChatGatewayController,
+    require('./rooms-gateway.controller').RoomsGatewayController,
   ],
 })
 export class GatewayModule {}

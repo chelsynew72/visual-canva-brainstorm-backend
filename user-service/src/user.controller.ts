@@ -11,6 +11,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -27,7 +28,12 @@ export class UserController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(@Query('email') email?: string) {
+    if (email) {
+      // Support filtering by email for auth service integration
+      const user = await this.userService.findByEmail(email);
+      return user ? [user] : [];
+    }
     return this.userService.findAll();
   }
 

@@ -16,8 +16,9 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 interface AuthenticatedRequest extends Request {
   user: {
-    userId: string;
+    id: string;
     email: string;
+    name: string;
   };
 }
 
@@ -28,7 +29,7 @@ export class RoomsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createRoomDto: CreateRoomDto, @Request() req: AuthenticatedRequest) {
-    const room = await this.roomsService.create(createRoomDto, req.user.userId);
+    const room = await this.roomsService.create(createRoomDto, req.user.id);
     return { room };
   }
 
@@ -40,7 +41,7 @@ export class RoomsController {
   @UseGuards(JwtAuthGuard)
   @Get('my-rooms')
   async findMyRooms(@Request() req: AuthenticatedRequest) {
-    return this.roomsService.findAll(req.user.userId);
+    return this.roomsService.findAll(req.user.id);
   }
 
   @Get(':id')
@@ -55,7 +56,7 @@ export class RoomsController {
     @Body('password') password: string,
     @Request() req: AuthenticatedRequest,
   ) {
-    return this.roomsService.joinRoom(roomId, req.user.userId, password);
+    return this.roomsService.joinRoom(roomId, req.user.id, password);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -64,6 +65,6 @@ export class RoomsController {
     @Param('id') roomId: string,
     @Request() req: AuthenticatedRequest,
   ) {
-    return this.roomsService.leaveRoom(roomId, req.user.userId);
+    return this.roomsService.leaveRoom(roomId, req.user.id);
   }
 }
