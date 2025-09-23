@@ -13,6 +13,7 @@ import {
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -66,5 +67,31 @@ export class RoomsController {
     @Request() req: AuthenticatedRequest,
   ) {
     return this.roomsService.leaveRoom(roomId, req.user.id);
+  }
+
+  // Microservice handlers for gateway
+  @MessagePattern('rooms.create')
+  async msCreate(@Payload() data: { createRoomDto: CreateRoomDto; userId: string }) {
+    return this.roomsService.create(data.createRoomDto, data.userId);
+  }
+
+  @MessagePattern('rooms.findAll')
+  async msFindAll(@Payload() data: { userId?: string }) {
+    return this.roomsService.findAll(data.userId);
+  }
+
+  @MessagePattern('rooms.findOne')
+  async msFindOne(@Payload() data: { id: string; userId?: string }) {
+    return this.roomsService.findOne(data.id, data.userId);
+  }
+
+  @MessagePattern('rooms.join')
+  async msJoin(@Payload() data: { roomId: string; userId: string; password?: string }) {
+    return this.roomsService.joinRoom(data.roomId, data.userId, data.password);
+  }
+
+  @MessagePattern('rooms.leave')
+  async msLeave(@Payload() data: { roomId: string; userId: string }) {
+    return this.roomsService.leaveRoom(data.roomId, data.userId);
   }
 }

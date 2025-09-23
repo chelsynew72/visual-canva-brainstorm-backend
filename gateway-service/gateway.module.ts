@@ -5,6 +5,7 @@ import { AuthGatewayController } from './auth-gateway.controller';
 import { CanvasGatewayController } from './canvas-gateway.controller';
 import { UserGatewayController } from './user-gateway.controller';
 import { ChatGatewayController } from './chat-gateway.controller';
+import { RoomsGatewayController } from './rooms-gateway.controller';
 
 @Module({
   imports: [
@@ -76,7 +77,7 @@ import { ChatGatewayController } from './chat-gateway.controller';
     CanvasGatewayController,
     UserGatewayController,
     ChatGatewayController,
-    require('./rooms-gateway.controller').RoomsGatewayController,
+    RoomsGatewayController,
   ],
 })
 export class GatewayModule {}
