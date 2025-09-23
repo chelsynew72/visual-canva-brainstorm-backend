@@ -9,6 +9,7 @@ import { AppService } from './app.service';
 import { CanvasModule } from './canvas/canvas.module';
 import { ShapesModule } from './shapes/shapes.module';
 import { CollaborationModule } from './collaboration/collaboration.module';
+import { RoomsModule } from './rooms/rooms.module';
 import { Canvas, CanvasSchema } from './canvas/schemas/canvas.schema';
 import { JwtStrategy } from './strategies/jwt.strategy';
 // import { ExportModule } from './export/export.module';
@@ -119,6 +120,7 @@ import configuration from './config/configuration';
     CanvasModule,
     ShapesModule,
     CollaborationModule,
+    RoomsModule,
     // ExportModule,
   ],
   controllers: [AppController],
