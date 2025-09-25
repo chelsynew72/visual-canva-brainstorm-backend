@@ -37,9 +37,9 @@ export class UserService {
       ...data,
       password: hashedPassword,
     });
-    
+
     const savedUser = await user.save();
-    
+
     // Return formatted for frontend
     return {
       id: savedUser.id,
@@ -51,7 +51,7 @@ export class UserService {
 
   async findAll(): Promise<any[]> {
     const users = await this.userModel.find().exec();
-    
+
     // Return formatted for frontend
     return users.map((user) => ({
       id: user.id,
