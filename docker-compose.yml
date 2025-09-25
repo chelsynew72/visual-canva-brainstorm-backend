@@ -51,81 +51,79 @@ services:
 #      - visual-canvas-network
 #    command: redis-server --appendonly yes
 
-  # Gateway Service
-  # gateway-service:
-  #   build:
-  #     context: ./gateway-service
-  #     dockerfile: Dockerfile
-  #   container_name: visual-canvas-gateway
-  #   restart: unless-stopped
-  #   ports:
-  #     - '3000:3000'
-  #   environment:
-  #     - NODE_ENV=development
-  #     - PORT=3000
-  #     - MONGODB_URI=mongodb://admin:password@mongodb:27017/visual_canvas?authSource=admin
-  #     - RABBITMQ_URL=amqp://admin:password@rabbitmq:5672
-  #     - REDIS_URL=redis://redis:6379
-  #   depends_on:
-  #     - mongodb
-  #     - rabbitmq
-  #     - redis
-  #   networks:
-  #     - visual-canvas-network
-  #   volumes:
-  #     - ./gateway-service:/app
-  #     - /app/node_modules
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    container_name: visual-canvas-gateway
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/visual_canvas?authSource=admin
+      - RABBITMQ_URL=amqp://admin:password@rabbitmq:5672
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - mongodb
+      - rabbitmq
+  # - redis
+    networks:
+      - visual-canvas-network
+    volumes:
+      - ./gateway-service:/app
+      - /app/node_modules
 
-  # Auth Service  
-  # auth-service:
-  #   build:
-  #     context: ./auth-service
-  #     dockerfile: Dockerfile
-  #   container_name: visual-canvas-auth
-  #   restart: unless-stopped
-  #   ports:
-  #     - '3002:3002'
-  #   environment:
-  #     - NODE_ENV=development
-  #     - PORT=3002
-  #     - MONGODB_URI=mongodb://admin:password@mongodb:27017/visual_canvas?authSource=admin
-  #     - RABBITMQ_URL=amqp://admin:password@rabbitmq:5672
-  #     - JWT_SECRET=your-super-secret-jwt-key-here
-  #     - JWT_EXPIRES_IN=24h
-  #   depends_on:
-  #     - mongodb
-  #     - rabbitmq
-  #   networks:
-  #     - visual-canvas-network
-  #   volumes:
-  #     - ./auth-service:/app
-  #     - /app/node_modules
+  auth-service:
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: visual-canvas-auth
+    restart: unless-stopped
+    ports:
+      - '3002:3002'
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/visual_canvas?authSource=admin
+      - RABBITMQ_URL=amqp://admin:password@rabbitmq:5672
+      - JWT_SECRET=your-super-secret-jwt-key-here
+      - JWT_EXPIRES_IN=24h
+    depends_on:
+      - mongodb
+      - rabbitmq
+    networks:
+      - visual-canvas-network
+    volumes:
+      - ./auth-service:/app
+      - /app/node_modules
 
-  # User Service
-  # user-service:
-  #   build:
-  #     context: ./user-service
-  #     dockerfile: Dockerfile
-  #   container_name: visual-canvas-user
-  #   restart: unless-stopped
-  #   ports:
-  #     - '3003:3003'
-  #   environment:
-  #     - NODE_ENV=development
-  #     - PORT=3003
-  #     - MONGODB_URI=mongodb://admin:password@mongodb:27017/visual_canvas?authSource=admin
-  #     - RABBITMQ_URL=amqp://admin:password@rabbitmq:5672
-  #   depends_on:
-  #     - mongodb
-  #     - rabbitmq
-  #     - auth-service
-  #   networks:
-  #     - visual-canvas-network
-  #   volumes:
-  #     - ./user-service:/app
-  #     - /app/node_modules
+  user-service:
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: visual-canvas-user
+    restart: unless-stopped
+    ports:
+    - '3004:3004'
+    environment:
+      - NODE_ENV=development
+      - PORT=3003
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/visual_canvas?authSource=admin
+      - RABBITMQ_URL=amqp://admin:password@rabbitmq:5672
+    depends_on:
+      - mongodb
+      - rabbitmq
+      - auth-service
+    networks:
+      - visual-canvas-network
+    volumes:
+      - ./user-service:/app
+      - /app/node_modules
 
-  # Canvas Service
   canvas-service:
     build:
       context: .
@@ -133,19 +131,19 @@ services:
     container_name: visual-canvas-canvas
     restart: unless-stopped
     ports:
-      - '3003:3003'
+      - '3005:3005'
     environment:
       - NODE_ENV=development
-      - PORT=3003
+      - PORT=3005
       - MONGODB_URI=mongodb://admin:password@mongodb:27017/visual_canvas?authSource=admin
       - RABBITMQ_URL=amqp://admin:password@rabbitmq:5672
-      # - USER_SERVICE_URL=http://user-service:3003
-      # - AUTH_SERVICE_URL=http://auth-service:3002
+      - USER_SERVICE_URL=http://user-service:3004
+      - AUTH_SERVICE_URL=http://auth-service:3002
     depends_on:
       - mongodb
       - rabbitmq
-      # - user-service
-      # - auth-service
+      - user-service
+      - auth-service
     networks:
       - visual-canvas-network
     volumes:

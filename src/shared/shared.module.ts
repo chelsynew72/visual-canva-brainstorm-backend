@@ -12,9 +12,9 @@ import { CacheService } from './services/cache.service';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('jwt.secret'),
+        secret: configService.get<string>('jwt.secret') || process.env.JWT_SECRET || 'your-default-secret',
         signOptions: {
-          expiresIn: configService.get<string>('jwt.expiresIn'),
+          expiresIn: configService.get<string>('jwt.expiresIn') || process.env.JWT_EXPIRES_IN || '7d',
         },
       }),
       inject: [ConfigService],
