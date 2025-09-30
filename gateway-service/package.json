@@ -10,14 +10,16 @@
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
+    "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/microservices": "^9.0.0",
-    "@nestjs/config": "^2.2.0",
-    "rxjs": "^7.8.0",
-    "reflect-metadata": "^0.1.13"
+    "@nestjs/swagger": "^11.2.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.0"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "ts-node": "^10.9.2"
+    "@types/swagger-ui-express": "^4.1.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.0.0"
   }
 }

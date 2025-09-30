@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SharedModule } from '../../src/shared/shared.module';
+import { SharedModule } from '../../src/libs/shared/shared.module';
 import { AuthGatewayController } from '../auth-gateway.controller';
 import { CanvasGatewayController } from '../canvas-gateway.controller';
 import { UserGatewayController } from '../user-gateway.controller';

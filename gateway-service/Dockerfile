@@ -13,5 +13,6 @@ COPY . .
 
 EXPOSE 3000
 
+RUN pnpm install
 RUN pnpm build
 CMD ["pnpm", "start:prod"]

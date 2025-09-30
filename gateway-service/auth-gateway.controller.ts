@@ -2,7 +2,7 @@ import { Controller, Post, Get, Body, Param, Inject, UseGuards, Options, Req, Re
 import { firstValueFrom } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../src/shared/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../src/libs/shared/guards/jwt-auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
