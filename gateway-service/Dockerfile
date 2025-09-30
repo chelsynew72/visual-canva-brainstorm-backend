@@ -13,4 +13,5 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["pnpm", "start"]
+RUN pnpm build
+CMD ["pnpm", "start:prod"]

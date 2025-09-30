@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SharedModule } from '../src/shared/shared.module';
-import { AuthGatewayController } from './auth-gateway.controller';
-import { CanvasGatewayController } from './canvas-gateway.controller';
-import { UserGatewayController } from './user-gateway.controller';
-import { ChatGatewayController } from './chat-gateway.controller';
-import { RoomsGatewayController } from './rooms-gateway.controller';
+import { SharedModule } from '../../src/shared/shared.module';
+import { AuthGatewayController } from '../auth-gateway.controller';
+import { CanvasGatewayController } from '../canvas-gateway.controller';
+import { UserGatewayController } from '../user-gateway.controller';
+import { ChatGatewayController } from '../chat-gateway.controller';
+import { RoomsGatewayController } from '../rooms-gateway.controller';
+import { GatewayController } from './gateway-controller';
 
 @Module({
   imports: [
@@ -107,6 +108,7 @@ import { RoomsGatewayController } from './rooms-gateway.controller';
     UserGatewayController,
     ChatGatewayController,
     RoomsGatewayController,
+    GatewayController,
   ],
 })
 export class GatewayModule {}
