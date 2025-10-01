@@ -76,7 +76,6 @@ services:
       - /app/node_modules
 
   auth-service:
-  auth-service:
     build:
       context: ./auth-service
       dockerfile: Dockerfile
@@ -100,7 +99,6 @@ services:
       - ./auth-service:/app
       - /app/node_modules
 
-  user-service:
   user-service:
     build:
       context: ./user-service
@@ -150,7 +148,6 @@ services:
       - ./canvas-service:/app
       - /app/node_modules
 
-  # Chat Service
   # chat-service:
   #   build:
   #     context: ./chat-service
@@ -175,7 +172,6 @@ services:
   #     - ./chat-service:/app
   #     - /app/node_modules
 
-  # Shapes Service
   # shapes-service:
   #   build:
   #     context: ./shapes-service

@@ -13,4 +13,4 @@ COPY . .
 
 EXPOSE 3002
 
-CMD ["pnpm", "start"]
+CMD ["pnpm", "start:prod"]
