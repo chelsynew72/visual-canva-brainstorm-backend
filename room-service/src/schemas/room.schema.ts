@@ -1,36 +1,53 @@
-import mongoose from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 
-// Sub-schema for drawing objects
-const DrawingSchema = new mongoose.Schema(
-  {
-    id: { type: String, required: true },
-    type: {
-      type: String,
-      enum: ['line', 'circle', 'rectangle'],
-      required: true,
-    },
-    coordinates: { type: Object, required: true }, 
-    style: { type: Object }, 
-    createdBy: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now },
-  },
-  { _id: false }, // don't generate _id for subdocs
-);
+@Schema({ _id: false })
+export class Drawing {
+  @Prop({ required: true })
+  id: string;
 
-// Main schema for a room/canvas
-const RoomSchema = new mongoose.Schema({
-  _id: {
-    type: String,
-    default: () => new mongoose.Types.ObjectId().toString(),
-  },
-  name: { type: String, required: true },
-  ownerId: { type: String, required: true },
-  shareableLinkKey: { type: String, unique: true, required: true },
-  drawings: { type: [DrawingSchema], default: [] }, // embedded drawings
-  createdAt: { type: Date, default: Date.now },
-  lastModifiedAt: { type: Date, default: Date.now },
-  asOf: { type: Number }, 
-});
+  @Prop({ required: true, enum: ['line', 'circle', 'rectangle'] })
+  type: string;
 
-// Create & export the model
-export default mongoose.model('Room', RoomSchema);
+  @Prop({ type: Object, required: true })
+  coordinates: Record<string, any>;
+
+  @Prop({ type: Object })
+  style?: Record<string, any>;
+
+  @Prop({ required: true })
+  createdBy: string;
+
+  @Prop({ default: Date.now })
+  createdAt: Date;
+}
+
+@Schema()
+export class Room extends Document {
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true })
+  ownerId: string;
+
+  @Prop({ required: true, unique: true })
+  shareableLinkKey: string;
+
+  @Prop({ type: [Drawing], default: [] })
+  drawings: Drawing[];
+
+  @Prop({ type: [String], default: [] })
+  participants: string[];
+
+  @Prop({ default: Date.now })
+  createdAt: Date;
+
+  @Prop({ default: Date.now })
+  lastModifiedAt: Date;
+
+  @Prop()
+  asOf?: number;
+}
+
+export const DrawingSchema = SchemaFactory.createForClass(Drawing);
+export const RoomSchema = SchemaFactory.createForClass(Room);
