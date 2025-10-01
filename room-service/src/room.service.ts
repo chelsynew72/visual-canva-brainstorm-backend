@@ -1,51 +1,53 @@
 import { Injectable } from '@nestjs/common';
-import { Room } from './room.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Room } from './schemas/room.schema';
+import { CreateRoomDto } from './dto/create-room.dto';
+import { AddParticipantDto } from './dto/add-participant.dto';
 import { randomUUID } from 'crypto';
 
 @Injectable()
 export class RoomService {
-  private rooms: Room[] = [];
+  constructor(
+    @InjectModel(Room.name) private roomModel: Model<Room>
+  ) {}
 
-  createRoom(name: string): Room {
-    const room: Room = {
-      id: randomUUID(),
-      name,
-      createdAt: new Date(),
-      sharableLink: this.generateSharableLink(),
+  async createRoom(createRoomDto: CreateRoomDto): Promise<Room> {
+    const sharableLink = randomUUID();
+    const createdRoom = new this.roomModel({
+      name: createRoomDto.name,
+      sharableLink,
       participants: [],
-    };
-    this.rooms.push(room);
-    return room;
+    });
+    return createdRoom.save();
   }
 
-  getRoom(id: string): Room | undefined {
-    return this.rooms.find(room => room.id === id);
+  async getRoom(id: string): Promise<Room | null> {
+    return this.roomModel.findById(id).exec();
   }
 
-  getAllRooms(): Room[] {
-    return this.rooms;
+  async getAllRooms(): Promise<Room[]> {
+    return this.roomModel.find().exec();
   }
 
-  generateSharableLink(): string {
-    return randomUUID();
+  async addParticipant(roomId: string, addParticipantDto: AddParticipantDto): Promise<Room | null> {
+    return this.roomModel.findByIdAndUpdate(
+      roomId,
+      { $addToSet: { participants: addParticipantDto.userId } },
+      { new: true }
+    ).exec();
   }
 
-  addParticipant(roomId: string, userId: string) {
-    const room = this.getRoom(roomId);
-    if (room && !room.participants.includes(userId)) {
-      room.participants.push(userId);
-    }
+  async removeParticipant(roomId: string, userId: string): Promise<Room | null> {
+    return this.roomModel.findByIdAndUpdate(
+      roomId,
+      { $pull: { participants: userId } },
+      { new: true }
+    ).exec();
   }
 
-  removeParticipant(roomId: string, userId: string) {
-    const room = this.getRoom(roomId);
-    if (room) {
-      room.participants = room.participants.filter(id => id !== userId);
-    }
-  }
-
-  getParticipants(roomId: string): string[] {
-    const room = this.getRoom(roomId);
+  async getParticipants(roomId: string): Promise<string[]> {
+    const room = await this.roomModel.findById(roomId).exec();
     return room ? room.participants : [];
   }
 }
