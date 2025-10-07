@@ -16,10 +16,11 @@ export class RoomService {
   ) {}
 
   async createRoom(createRoomDto: CreateRoomDto): Promise<RoomDocument> {
-    const sharableLink = randomUUID();
+    const shareableLinkKey = randomUUID();
     const createdRoom = new this.roomModel({
       name: createRoomDto.name,
-      sharableLink,
+      ownerId: createRoomDto.ownerId,
+      shareableLinkKey,
       participants: [],
     });
     return createdRoom.save();
