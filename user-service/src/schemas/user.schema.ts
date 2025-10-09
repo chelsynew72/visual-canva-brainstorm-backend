@@ -6,8 +6,8 @@ export class User extends Document {
   @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({ required: true })
-  password: string;
+  @Prop({ required: false }) // Password not required when synced from auth service
+  password?: string;
 
   @Prop({ required: true })
   firstName: string;
@@ -17,6 +17,9 @@ export class User extends Document {
 
   @Prop()
   avatar?: string;
+
+  @Prop() // Link to auth service user ID
+  authServiceId?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

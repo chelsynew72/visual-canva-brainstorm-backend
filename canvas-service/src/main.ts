@@ -9,16 +9,16 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
   const configService = app.get(ConfigService);
-  const port = configService.get('port', 3003);
-  const rabbitmqUrl = configService.get('rabbitmq.url');
-  const queuePrefix = configService.get('rabbitmq.queuePrefix');
+  const port = configService.get('PORT') || 3005;
+  const rabbitmqUrl = configService.get('RABBITMQ_URL') || 'amqp://localhost:5672';
+  const corsOrigin = configService.get('CORS_ORIGIN') || 'http://localhost:3000';
   
   // Configure RabbitMQ microservice
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
       urls: [rabbitmqUrl],
-      queue: `${queuePrefix}-main`,
+      queue: 'canvas-service',
       queueOptions: {
         durable: true,
       },
@@ -35,8 +35,10 @@ async function bootstrap() {
 
   // CORS for WebSocket and HTTP
   app.enableCors({
-    origin: configService.get('websocket.allowedOrigins'),
+    origin: corsOrigin,
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   // Start both HTTP server and microservices

@@ -32,7 +32,9 @@
       "@canvas/*": ["./canvas-service/src/*"],
       "@chat/*": ["./chat-service/src/*"],
       "@shapes/*": ["./shapes-service/src/*"],
-      "@gateway/*": ["./gateway-service/src/*"]
+      "@gateway/*": ["./gateway-service/src/*"],
+      "@shared/*": ["../shared/*"]
+
     }
   },
   "include": [

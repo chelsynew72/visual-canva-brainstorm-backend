@@ -1,16 +1,19 @@
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, MinLength, IsOptional } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(6)
-  password: string;
+  password?: string;
 
   @IsNotEmpty()
   firstName: string;
 
   @IsNotEmpty()
   lastName: string;
+
+  @IsOptional()
+  authServiceId?: string; // Link to auth service user
 }
