@@ -17,6 +17,11 @@ export class RoomController {
     return this.roomService.getRoom(id);
   }
 
+  @Get(':id/validate-key/:key')
+  async validateKey(@Param('id') id: string, @Param('key') key: string) {
+    return this.roomService.validateShareableLinkKey(id, key);
+  }
+
   @Get()
   async getAllRooms() {
     return this.roomService.getAllRooms();

@@ -30,6 +30,14 @@ export class RoomService {
     return this.roomModel.findById(id).exec();
   }
 
+  async validateShareableLinkKey(roomId: string, key: string): Promise<{ valid: boolean }> {
+    const room = await this.roomModel.findById(roomId).exec();
+    if (!room) {
+      return { valid: false };
+    }
+    return { valid: room.shareableLinkKey === key };
+  }
+
   async getAllRooms(): Promise<RoomDocument[]> {
     return this.roomModel.find().exec();
   }
